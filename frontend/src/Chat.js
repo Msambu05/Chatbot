@@ -163,180 +163,214 @@ function Chat() {
   )
 
   return (
-    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFFAF0 0%, #FFF4E6 100%)', padding: '1.5rem' }}>
-      {/* Header */}
+    <div style={{ minHeight: '100vh', background: 'linear-gradient(135deg, #FFFAF0 0%, #FFF4E6 100%)' }}>
+      {/* Main Header - Sticky at top */}
       <div style={{ 
         background: 'linear-gradient(135deg, #FF6B35 0%, #FF9500 50%, #FFD700 100%)',
         color: 'white',
-        padding: '2.5rem 2rem',
-        marginBottom: '2rem',
-        borderRadius: '12px',
-        boxShadow: '0 15px 50px rgba(255, 107, 53, 0.3)',
-        textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+        padding: '0.75rem 1.5rem',
+        boxShadow: '0 4px 15px rgba(255, 107, 53, 0.2)',
+        textShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+        position: 'sticky',
+        top: 0,
+        zIndex: 100,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'space-between',
+        gap: '1rem'
       }}>
-        <h1 style={{ margin: '0 0 0.5rem 0', fontSize: '2rem', fontWeight: '700' }}>
-          Izingcweti ICT Solutions
-        </h1>
-        <p style={{ margin: '0', fontSize: '1rem', opacity: 0.95 }}>
-          Questionnaire - {questionnaire?.title || 'Loading...'}
-        </p>
-      </div>
-
-      <div style={{ maxWidth: '850px', margin: '0 auto' }}>
-        <div style={{
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          boxShadow: '0 15px 50px rgba(255, 107, 53, 0.15)',
-          overflow: 'hidden',
-          borderTop: '5px solid #FF9500'
-        }}>
-          {/* Chat Messages */}
-          <div id="chat-messages" style={{
-            height: '450px',
-            overflowY: 'auto',
-            padding: '2rem',
-            background: 'linear-gradient(to bottom, #FFFAF0, #FFF8F5)'
-          }}>
-            {messages.map((m, i) => (
-              <div key={i} style={{
-                marginBottom: '1.25rem',
-                display: 'flex',
-                justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start'
-              }}>
-                <div style={{
-                  maxWidth: '70%',
-                  padding: '0.875rem 1.25rem',
-                  borderRadius: '12px',
-                  wordWrap: 'break-word',
-                  background: m.role === 'user' ? 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)' : '#F0F0F0',
-                  color: m.role === 'user' ? 'white' : '#4A3728',
-                  fontSize: '0.95rem',
-                  lineHeight: '1.6',
-                  boxShadow: m.role === 'user' ? '0 4px 15px rgba(255, 107, 53, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.08)',
-                  fontWeight: m.role === 'user' ? '500' : '400'
-                }}>
-                  {m.content}
-                </div>
-              </div>
-            ))}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+          <img 
+            src="/izingcweti-logo.png" 
+            alt="Izingcweti ICT Solutions Logo" 
+            style={{ height: '40px', width: 'auto', borderRadius: '6px', backgroundColor: 'white', padding: '5px' }}
+          />
+          <div>
+            <h1 style={{ margin: '0', fontSize: '1.25rem', fontWeight: '700' }}>
+              Izingcweti ICT Solutions
+            </h1>
+            <p style={{ margin: '0', fontSize: '0.85rem', opacity: 0.95 }}>
+              Questionnaire - {questionnaire?.title || 'Loading...'}
+            </p>
           </div>
-
-          {/* Input Area */}
-          {!session || session.is_completed ? (
-            <div style={{
-              padding: '2rem',
-              backgroundColor: 'white',
-              textAlign: 'center',
-              borderTop: '1px solid #FFE8D6',
-              background: 'linear-gradient(135deg, #FFF8F5 0%, white 100%)'
-            }}>
-              <p style={{ color: '#2E8B57', fontWeight: '700', fontSize: '1.1rem', margin: '0 0 0.5rem 0' }}>
-                ✓ Questionnaire Completed
-              </p>
-              <p style={{ color: '#999', fontSize: '0.9rem', margin: '0' }}>
-                Redirecting to completion report...
-              </p>
-            </div>
-          ) : (
-            <div style={{
-              padding: '1.5rem',
-              backgroundColor: 'white',
-              borderTop: '2px solid #FFE8D6',
-              display: 'flex',
-              gap: '1rem',
-              background: 'linear-gradient(135deg, white 0%, #FFFAF0 100%)'
-            }}>
-              <textarea
-                value={currentAnswer}
-                onChange={(e) => setCurrentAnswer(e.target.value)}
-                onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() } }}
-                placeholder="Type your answer..."
-                style={{
-                  flex: 1,
-                  padding: '0.875rem 1rem',
-                  border: '2px solid #FFE8D6',
-                  borderRadius: '8px',
-                  fontSize: '0.95rem',
-                  fontFamily: 'inherit',
-                  resize: 'none',
-                  minHeight: '90px',
-                  boxSizing: 'border-box',
-                  transition: 'all 0.3s ease',
-                  background: 'white'
-                }}
-                onFocus={(e) => {
-                  e.target.style.borderColor = '#FF9500';
-                  e.target.style.boxShadow = '0 0 0 3px rgba(255, 149, 0, 0.1)';
-                }}
-                onBlur={(e) => {
-                  e.target.style.borderColor = '#FFE8D6';
-                  e.target.style.boxShadow = 'none';
-                }}
-              />
-              <button 
-                onClick={handleSubmit} 
-                disabled={!currentAnswer.trim()}
-                style={{
-                  background: currentAnswer.trim() ? 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)' : '#CCC',
-                  color: 'white',
-                  border: 'none',
-                  padding: '0.875rem 1.75rem',
-                  borderRadius: '8px',
-                  fontWeight: '600',
-                  cursor: currentAnswer.trim() ? 'pointer' : 'not-allowed',
-                  transition: 'all 0.3s ease',
-                  minWidth: '110px',
-                  boxShadow: currentAnswer.trim() ? '0 4px 15px rgba(255, 107, 53, 0.3)' : 'none'
-                }}
-                onMouseEnter={(e) => {
-                  if (currentAnswer.trim()) {
-                    e.target.style.transform = 'translateY(-3px)';
-                    e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 53, 0.4)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)';
-                  if (currentAnswer.trim()) {
-                    e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 53, 0.3)';
-                  }
-                }}
-              >
-                Send
-              </button>
-            </div>
-          )}
         </div>
-
-        {/* Progress Indicator */}
         {session && !session.is_completed && questionnaire && (
           <div style={{
-            marginTop: '1.5rem',
-            padding: '1rem 1.5rem',
-            backgroundColor: 'white',
-            borderRadius: '8px',
-            textAlign: 'center',
+            padding: '0.5rem 1rem',
+            background: 'rgba(255, 255, 255, 0.2)',
+            borderRadius: '6px',
+            fontWeight: '600',
             fontSize: '0.9rem',
-            color: '#666',
-            boxShadow: '0 4px 12px rgba(255, 107, 53, 0.1)',
-            fontWeight: '500'
+            backdropFilter: 'blur(4px)'
           }}>
-            <p style={{ margin: '0' }}>Question <span style={{ color: '#FF9500', fontWeight: '700' }}>{session.current_question_index + 1}</span> of <span style={{ color: '#FF9500', fontWeight: '700' }}>{questionnaire.questions.length}</span></p>
-            <div style={{
-              marginTop: '0.75rem',
-              height: '4px',
-              backgroundColor: '#FFE8D6',
-              borderRadius: '2px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                height: '100%',
-                background: 'linear-gradient(90deg, #FF6B35 0%, #FF9500 100%)',
-                width: `${((session.current_question_index + 1) / questionnaire.questions.length) * 100}%`,
-                transition: 'width 0.3s ease'
-              }}></div>
-            </div>
+            Question {session.current_question_index + 1} of {questionnaire.questions.length}
           </div>
         )}
+      </div>
+
+      <div style={{ padding: '1.5rem' }}>
+        <div style={{ maxWidth: '850px', margin: '0 auto', flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            boxShadow: '0 15px 50px rgba(255, 107, 53, 0.15)',
+            overflow: 'hidden'
+          }}>
+            {/* Mini Header - Questionnaire Info with Progress */}
+            {session && !session.is_completed && questionnaire && (
+              <div style={{
+                padding: '1rem 1.5rem',
+                background: 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)',
+                color: 'white'
+              }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
+                  <div>
+                    <h2 style={{ margin: '0', fontSize: '1.1rem', fontWeight: '600', color: 'white' }}>
+                      {questionnaire.title}
+                    </h2>
+                    {questionnaire.description && (
+                      <p style={{ margin: '0.25rem 0 0', fontSize: '0.85rem', color: 'rgba(255,255,255,0.9)' }}>
+                        {questionnaire.description}
+                      </p>
+                    )}
+                  </div>
+                  <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+                    {session.current_question_index + 1} of {questionnaire.questions.length}
+                  </div>
+                </div>
+                <div style={{
+                  height: '4px',
+                  backgroundColor: 'rgba(255,255,255,0.3)',
+                  borderRadius: '2px',
+                  overflow: 'hidden'
+                }}>
+                  <div style={{
+                    height: '100%',
+                    backgroundColor: 'white',
+                    width: `${((session.current_question_index + 1) / questionnaire.questions.length) * 100}%`,
+                    transition: 'width 0.3s ease'
+                  }}></div>
+                </div>
+              </div>
+            )}
+            {/* Chat Messages */}
+            <div id="chat-messages" style={{
+              height: '380px',
+              overflowY: 'auto',
+              padding: '1.5rem',
+              background: 'linear-gradient(to bottom, #FFFAF0, #FFF8F5)'
+            }}>
+              {messages.map((m, i) => (
+                <div key={i} style={{
+                  marginBottom: '1.25rem',
+                  display: 'flex',
+                  justifyContent: m.role === 'user' ? 'flex-end' : 'flex-start'
+                }}>
+                  <div style={{
+                    maxWidth: '70%',
+                    padding: '0.875rem 1.25rem',
+                    borderRadius: '12px',
+                    wordWrap: 'break-word',
+                    background: m.role === 'user' ? 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)' : '#F0F0F0',
+                    color: m.role === 'user' ? 'white' : '#4A3728',
+                    fontSize: '0.95rem',
+                    lineHeight: '1.6',
+                    boxShadow: m.role === 'user' ? '0 4px 15px rgba(255, 107, 53, 0.25)' : '0 2px 8px rgba(0, 0, 0, 0.08)',
+                    fontWeight: m.role === 'user' ? '500' : '400'
+                  }}>
+                    {m.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Input Area */}
+            {!session || session.is_completed ? (
+              <div style={{
+                padding: '2rem',
+                backgroundColor: 'white',
+                textAlign: 'center',
+                borderTop: '1px solid #FFE8D6',
+                background: 'linear-gradient(135deg, #FFF8F5 0%, white 100%)'
+              }}>
+                <p style={{ color: '#2E8B57', fontWeight: '700', fontSize: '1.1rem', margin: '0 0 0.5rem 0' }}>
+                  ✓ Questionnaire Completed
+                </p>
+                <p style={{ color: '#999', fontSize: '0.9rem', margin: '0' }}>
+                  Redirecting to completion report...
+                </p>
+              </div>
+            ) : (
+              <div style={{
+                padding: '1.5rem',
+                backgroundColor: 'white',
+                borderTop: '2px solid #FFE8D6',
+                display: 'flex',
+                gap: '1rem',
+                background: 'linear-gradient(135deg, white 0%, #FFFAF0 100%)'
+              }}>
+                <textarea
+                  value={currentAnswer}
+                  onChange={(e) => setCurrentAnswer(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); handleSubmit() } }}
+                  placeholder="Type your answer..."
+                  style={{
+                    flex: 1,
+                    padding: '0.75rem 1rem',
+                    border: '2px solid #FFE8D6',
+                    borderRadius: '8px',
+                    fontSize: '0.95rem',
+                    fontFamily: 'inherit',
+                    resize: 'none',
+                    minHeight: '50px',
+                    maxHeight: '120px',
+                    boxSizing: 'border-box',
+                    transition: 'all 0.3s ease',
+                    background: 'white'
+                  }}
+                  onFocus={(e) => {
+                    e.target.style.borderColor = '#FF9500';
+                    e.target.style.boxShadow = '0 0 0 3px rgba(255, 149, 0, 0.1)';
+                  }}
+                  onBlur={(e) => {
+                    e.target.style.borderColor = '#FFE8D6';
+                    e.target.style.boxShadow = 'none';
+                  }}
+                />
+                <button 
+                  onClick={handleSubmit} 
+                  disabled={!currentAnswer.trim()}
+                  style={{
+                    background: currentAnswer.trim() ? 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)' : '#CCC',
+                    color: 'white',
+                    border: 'none',
+                    padding: '0.875rem 1.75rem',
+                    borderRadius: '8px',
+                    fontWeight: '600',
+                    cursor: currentAnswer.trim() ? 'pointer' : 'not-allowed',
+                    transition: 'all 0.3s ease',
+                    minWidth: '110px',
+                    boxShadow: currentAnswer.trim() ? '0 4px 15px rgba(255, 107, 53, 0.3)' : 'none'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (currentAnswer.trim()) {
+                      e.target.style.transform = 'translateY(-3px)';
+                      e.target.style.boxShadow = '0 8px 25px rgba(255, 107, 53, 0.4)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    e.target.style.transform = 'translateY(0)';
+                    if (currentAnswer.trim()) {
+                      e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 53, 0.3)';
+                    }
+                  }}
+                >
+                  Send
+                </button>
+              </div>
+            )}
+          </div>
+        </div>
       </div>
 
       <style>{`

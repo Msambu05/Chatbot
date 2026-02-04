@@ -583,18 +583,21 @@ class AnswerCreateView(APIView):
 
             question = get_object_or_404(Question, id=question_id, questionnaire=session.questionnaire)
 
+            # Validate that the answer is for the current question in sequence
+            expected_question = session.questionnaire.questions.order_by('position')[session.current_question_index] if session.questionnaire.questions.exists() else None
+            if expected_question and str(question_id) != str(expected_question.id):
+                return Response({
+                    'error': 'You must answer questions in order. Please answer the current question first.',
+                    'expected_question_id': str(expected_question.id),
+                    'current_question_index': session.current_question_index
+                }, status=status.HTTP_400_BAD_REQUEST)
+
             # Create the answer
             answer = Answer.objects.create(
                 session=session,
                 question=question,
                 answer_text=answer_text,
             )
-
-            # Update session progress
-            session.current_question_index += 1
-            if session.current_question_index >= session.total_questions:
-                session.is_completed = True
-            session.save()
 
             # Log the action
             AuditLog.objects.create(
@@ -609,8 +612,7 @@ class AnswerCreateView(APIView):
                 'id': str(answer.id),
                 'question_id': question_id,
                 'answer': answer_text,
-                'session_progress': session.current_question_index,
-                'is_completed': session.is_completed,
+                'current_question_index': session.current_question_index,
             }, status=status.HTTP_201_CREATED)
 
         except Exception as e:

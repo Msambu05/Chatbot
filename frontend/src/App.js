@@ -288,9 +288,16 @@ function App() {
           alignItems: 'center',
           justifyContent: 'space-between'
         }}>
-          <h1 style={{ fontSize: '1.75rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: '0' }}>
-            Izingcweti ICT Solutions
-          </h1>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <img 
+              src="/izingcweti-logo.png" 
+              alt="Izingcweti ICT Solutions Logo" 
+              style={{ height: '48px', width: 'auto' }}
+            />
+            <h1 style={{ fontSize: '1.75rem', fontWeight: 'bold', background: 'linear-gradient(135deg, #FF6B35 0%, #FF9500 100%)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', margin: '0' }}>
+              Izingcweti ICT Solutions
+            </h1>
+          </div>
           <button
             onClick={() => setShowLogin(true)}
             style={{
