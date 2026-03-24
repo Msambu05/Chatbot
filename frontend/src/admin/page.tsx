@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useState, useCallback } from "react"
 import { useRouter } from "next/navigation"
 import { requireAuth, logout } from "@/lib/auth"
